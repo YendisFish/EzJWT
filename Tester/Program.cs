@@ -1,28 +1,28 @@
 ﻿using System.Security.Claims;
+using System.Security.Cryptography;
 using EzJWT;
 
 const string key = "my16characterkey";
+byte[] iv = RandomNumberGenerator.GetBytes(16);
 
-using (Jwt jwt = new Jwt(key))
+string token = "";
+
+using (Jwt jwt = new Jwt(key, iv))
 {
     ClaimCollection collection = new ClaimCollection();
     collection.AddClaim("userId", Guid.NewGuid().ToString());
     collection.AddClaim("userName", "JohnDoe");
     collection.AddExpiration(DateTimeOffset.UtcNow.AddSeconds(1));
 
-    Thread.Sleep(5000);
-    
-    string serialized = collection.CreateJwt(jwt);
-    ClaimCollection deserialized = ClaimCollection.FromJwt(jwt, serialized) ?? throw new NullReferenceException();
+    token = collection.CreateJwt(jwt);
+}
 
-    Console.WriteLine("Serialized: " + serialized);
+using (Jwt jwt = new Jwt(key, iv))
+{
+    ClaimCollection collection = ClaimCollection.FromJwt(jwt, token);
 
-    Console.WriteLine("Deserialized:");
-    foreach (KeyValuePair<string, object?> element in deserialized)
+    foreach (KeyValuePair<string, object> val in collection)
     {
-        Console.WriteLine(element.Key + " : " + element.Value);
+        Console.WriteLine(val.Key + " : " + val.Value);
     }
-
-    Console.WriteLine(deserialized.IsExpired);
-    
 }

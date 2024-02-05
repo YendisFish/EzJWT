@@ -9,12 +9,13 @@ public class Jwt : IDisposable
     public string Key { get; init; }
     private SymmetricAlgorithm aes { get; set; } // eventually maybe I will support more than AES
 
-    public Jwt(string? key = null)
+    public Jwt(string? key = null, byte[]? aesIv = null)
     {
         Key = string.IsNullOrEmpty(key) ? Convert.ToBase64String(RandomNumberGenerator.GetBytes(16)) : key;
 
         aes = Aes.Create();
         aes.Key = Encoding.UTF8.GetBytes(Key);
+        aes.IV = (aesIv is not null) ? aesIv : RandomNumberGenerator.GetBytes(16);
     }
 
     public string Serialize<T>(T data) => this.Encrypt(JsonConvert.SerializeObject(data));

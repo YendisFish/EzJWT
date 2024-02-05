@@ -2,7 +2,7 @@
 
 public class ClaimCollection
 {
-    private Dictionary<string, object?> raw { get; init; } = new();
+    private Dictionary<string, object?> raw { get; init; }
     public bool IsExpired => (raw.ContainsKey("expiration")) ? (long)raw["expiration"]! <= DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() : false;
 
     public KeyValuePair<string, object?> this[int index]
@@ -28,7 +28,7 @@ public class ClaimCollection
 
     public IEnumerator<KeyValuePair<string, object?>> GetEnumerator() => raw.GetEnumerator();
     
-    public void AddClaim(string key, string value)
+    public void AddClaim(string key, object? value)
     {
         raw.Add(key, value);
     }
