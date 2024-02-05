@@ -11,7 +11,7 @@ you will also need an API.
 
 # How To Use
 
-At its most basic sense EzJWT provides a 2 classes to help you create a token. Here
+At its most basic level EzJWT provides 2 classes to help you create a token. Here
 is an example:
 
 Make sure you have your key:
